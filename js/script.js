@@ -373,111 +373,122 @@ function setLanguage(lang){
   });
   document.getElementById("langES").classList.toggle("active",lang==="es");
   document.getElementById("langEN").classList.toggle("active",lang==="en");
-  localStorage.setItem("corpovidasalang",lang);
+  try{ localStorage.setItem("corpovidasalang",lang); }catch(e){}
 }
 document.addEventListener("DOMContentLoaded",()=>{
-  document.getElementById("langES").addEventListener("click",()=>setLanguage("es"));
-  document.getElementById("langEN").addEventListener("click",()=>setLanguage("en"));
-  setLanguage(localStorage.getItem("corpovidasalang")||"es");
+  try{
+    document.getElementById("langES").addEventListener("click",()=>setLanguage("es"));
+    document.getElementById("langEN").addEventListener("click",()=>setLanguage("en"));
+    let savedLang="es";
+    try{ savedLang=localStorage.getItem("corpovidasalang")||"es"; }catch(e){}
+    setLanguage(savedLang);
+  }catch(e){}
 
-  const medicalModal=document.getElementById("medicalModal");
-  const openMedicalLinks=document.querySelectorAll(".open-medical-modal");
-  function openModal(modal){
-    if(!modal) return;
-    modal.classList.add("open");
-    document.body.style.overflow="hidden";
-  }
-  function closeModal(modal){
-    if(!modal) return;
-    modal.classList.remove("open");
-    document.body.style.overflow="";
-  }
-  openMedicalLinks.forEach(link=>{
-    link.addEventListener("click",e=>{
-      e.preventDefault();
-      openModal(medicalModal);
-    });
-  });
-  document.querySelectorAll(".modal-overlay").forEach(modal=>{
-    const closeBtn=modal.querySelector(".modal-close");
-    if(closeBtn) closeBtn.addEventListener("click",()=>closeModal(modal));
-    modal.addEventListener("click",e=>{
-      if(e.target===modal) closeModal(modal);
-    });
-    modal.querySelectorAll(".modal-tab").forEach(tabBtn=>{
-      tabBtn.addEventListener("click",()=>{
-        modal.querySelectorAll(".modal-tab").forEach(b=>b.classList.remove("active"));
-        modal.querySelectorAll(".modal-tab-panel").forEach(p=>p.classList.remove("active"));
-        tabBtn.classList.add("active");
-        const panel=document.getElementById(tabBtn.getAttribute("data-tab"));
-        if(panel) panel.classList.add("active");
-        const box=modal.querySelector(".modal-box");
-        if(box) box.scrollTop=0;
+  let openModal=function(){};
+  let closeModal=function(){};
+  try{
+    const medicalModal=document.getElementById("medicalModal");
+    const openMedicalLinks=document.querySelectorAll(".open-medical-modal");
+    openModal=function(modal){
+      if(!modal) return;
+      modal.classList.add("open");
+      modal.style.display="flex";
+      document.body.style.overflow="hidden";
+    };
+    closeModal=function(modal){
+      if(!modal) return;
+      modal.classList.remove("open");
+      modal.style.display="none";
+      document.body.style.overflow="";
+    };
+    openMedicalLinks.forEach(link=>{
+      link.addEventListener("click",e=>{
+        e.preventDefault();
+        openModal(medicalModal);
       });
     });
-  });
-  document.addEventListener("keydown",e=>{
-    if(e.key==="Escape") document.querySelectorAll(".modal-overlay.open").forEach(closeModal);
-  });
-
-
-  const label=document.getElementById("heroVisualLabel");
-  const heroVisual=document.querySelector(".hero-visual");
-  const orbitRing=document.querySelector(".hero-visual .orbit-ring");
-  const allSats=document.querySelectorAll(".hero-visual .sat-counter");
-
-  function showTip(node){
-    if(!label||!heroVisual||!node) return;
-    if(orbitRing) orbitRing.classList.add("cv-paused");
-    allSats.forEach(s=>s.classList.add("cv-paused"));
-    const hRect=heroVisual.getBoundingClientRect();
-    const nRect=node.getBoundingClientRect();
-    const nCenterX=nRect.left+nRect.width/2;
-    const nCenterY=nRect.top+nRect.height/2;
-    const hCenterX=hRect.left+hRect.width/2;
-    const relY=nCenterY-hRect.top;
-    label.classList.remove("tip-left","tip-right");
-    if(nCenterX<=hCenterX){
-      label.style.left=(nRect.right-hRect.left)+"px";
-      label.classList.add("tip-right");
-    } else {
-      label.style.left=(nRect.left-hRect.left)+"px";
-      label.classList.add("tip-left");
-    }
-    label.style.top=relY+"px";
-    label.textContent=node.getAttribute("data-service")||"";
-    label.classList.add("show");
-  }
-  function hideTip(){
-    if(!label) return;
-    label.classList.remove("show");
-    if(orbitRing) orbitRing.classList.remove("cv-paused");
-    allSats.forEach(s=>s.classList.remove("cv-paused"));
-  }
-
-  if(heroVisual){
-    heroVisual.addEventListener("pointerover",e=>{
-      const g=e.target.closest(".sat-counter");
-      if(g) showTip(g);
+    document.querySelectorAll(".modal-overlay").forEach(modal=>{
+      const closeBtn=modal.querySelector(".modal-close");
+      if(closeBtn) closeBtn.addEventListener("click",()=>closeModal(modal));
+      modal.addEventListener("click",e=>{
+        if(e.target===modal) closeModal(modal);
+      });
+      modal.querySelectorAll(".modal-tab").forEach(tabBtn=>{
+        tabBtn.addEventListener("click",()=>{
+          modal.querySelectorAll(".modal-tab").forEach(b=>b.classList.remove("active"));
+          modal.querySelectorAll(".modal-tab-panel").forEach(p=>p.classList.remove("active"));
+          tabBtn.classList.add("active");
+          const panel=document.getElementById(tabBtn.getAttribute("data-tab"));
+          if(panel) panel.classList.add("active");
+          const box=modal.querySelector(".modal-box");
+          if(box) box.scrollTop=0;
+        });
+      });
     });
-    heroVisual.addEventListener("pointerout",e=>{
-      const g=e.target.closest(".sat-counter");
-      if(g && !(e.relatedTarget && g.contains(e.relatedTarget))) hideTip();
+    document.addEventListener("keydown",e=>{
+      if(e.key==="Escape") document.querySelectorAll(".modal-overlay.open").forEach(closeModal);
     });
-    heroVisual.addEventListener("click",e=>{
-      const g=e.target.closest(".sat-counter");
-      if(g){
-        showTip(g);
-        const modalId=g.getAttribute("data-modal");
-        if(modalId){
-          const modalEl=document.getElementById(modalId);
-          if(modalEl) openModal(modalEl);
-        }
+  }catch(e){}
+
+  try{
+    const label=document.getElementById("heroVisualLabel");
+    const heroVisual=document.querySelector(".hero-visual");
+    const orbitRing=document.querySelector(".hero-visual .orbit-ring");
+    const allSats=document.querySelectorAll(".hero-visual .sat-counter");
+
+    function showTip(node){
+      if(!label||!heroVisual||!node) return;
+      if(orbitRing) orbitRing.classList.add("cv-paused");
+      allSats.forEach(s=>s.classList.add("cv-paused"));
+      const hRect=heroVisual.getBoundingClientRect();
+      const nRect=node.getBoundingClientRect();
+      const nCenterX=nRect.left+nRect.width/2;
+      const nCenterY=nRect.top+nRect.height/2;
+      const hCenterX=hRect.left+hRect.width/2;
+      const relY=nCenterY-hRect.top;
+      label.classList.remove("tip-left","tip-right");
+      if(nCenterX<=hCenterX){
+        label.style.left=(nRect.right-hRect.left)+"px";
+        label.classList.add("tip-right");
+      } else {
+        label.style.left=(nRect.left-hRect.left)+"px";
+        label.classList.add("tip-left");
       }
-    });
-    allSats.forEach(node=>{
-      node.addEventListener("focus",()=>showTip(node));
-      node.addEventListener("blur",hideTip);
-    });
-  }
+      label.style.top=relY+"px";
+      label.textContent=node.getAttribute("data-service")||"";
+      label.classList.add("show");
+    }
+    function hideTip(){
+      if(!label) return;
+      label.classList.remove("show");
+      if(orbitRing) orbitRing.classList.remove("cv-paused");
+      allSats.forEach(s=>s.classList.remove("cv-paused"));
+    }
+
+    if(heroVisual){
+      heroVisual.addEventListener("pointerover",e=>{
+        const g=e.target.closest(".sat-counter");
+        if(g) showTip(g);
+      });
+      heroVisual.addEventListener("pointerout",e=>{
+        const g=e.target.closest(".sat-counter");
+        if(g && !(e.relatedTarget && g.contains(e.relatedTarget))) hideTip();
+      });
+      heroVisual.addEventListener("click",e=>{
+        const g=e.target.closest(".sat-counter");
+        if(g){
+          showTip(g);
+          const modalId=g.getAttribute("data-modal");
+          if(modalId){
+            const modalEl=document.getElementById(modalId);
+            if(modalEl) openModal(modalEl);
+          }
+        }
+      });
+      allSats.forEach(node=>{
+        node.addEventListener("focus",()=>showTip(node));
+        node.addEventListener("blur",hideTip);
+      });
+    }
+  }catch(e){}
 });

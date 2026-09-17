@@ -67,8 +67,8 @@
  .international-vision{grid-template-columns:1fr}.iv-label{writing-mode:horizontal-tb;border-left:0;
  border-bottom:1px solid rgba(201,166,90,.5);padding:0 0 .8rem}.iv-points{grid-template-columns:1fr}
 }
-.modal-overlay{display:none;position:fixed;inset:0;background:#04142bcc;z-index:200;align-items:center;justify-content:center;padding:24px}
-.modal-overlay.open{display:flex}
+.modal-overlay{display:none;position:fixed;top:0;right:0;bottom:0;left:0;inset:0;background:#04142bcc;z-index:200;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.open{display:flex !important}
 .modal-box{background:#fff;color:#12283f;max-width:760px;width:100%;max-height:88vh;overflow-y:auto;border-radius:12px;position:relative;box-shadow:0 20px 60px #00142e80;padding:38px 34px 34px}
 .modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:#eef3f8;color:#16324f;font-size:16px;font-weight:700;cursor:pointer;line-height:1}
 .modal-close:hover{background:#dfe8f0}
