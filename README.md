@@ -3,26 +3,20 @@
 Sitio de una sola página para CORPOVIDASA (Corporación de Servicios de Vida, S.A.), bilingüe (ES/EN).
 
 ## Estructura
-- `index.html` — contenido y estructura
+- `index.html` — contenido y estructura (ya incluye `<script src="js/script.js">` al final)
 - `css/style.css` — estilos
-- `js/script.js` — traducciones ES/EN e interactividad
+- `js/script.js` — traducciones ES/EN e interactividad (modales, hero animado)
 - `images/CORPOVIDASA_logo_final.png` — logo oficial
 
-## Contenido
-- Header con menú, selector de idioma y botón de contacto
-- Hero con el mensaje "Múltiples soluciones Integradas / Coordinadas para mejorar la vida de nuestros clientes en forma sencilla y práctica", seguido de una red de 8 círculos animados (servicios del grupo) que orbitan alrededor del globo
-- Interactividad: al pasar el cursor o presionar cada círculo, aparece a la par el nombre del servicio (con tooltip nativo del navegador como respaldo)
-- Tres círculos abren un modal detallado al presionarlos:
-  - **Hospedaje**: información completa de Apartamentos Confortables Guatemala (características, descuentos, aspectos favorables)
-  - **Servicios médicos y funerarios**: modal con dos pestañas (Servicios Médicos / Servicios Funerarios), cada una con íconos por sección
-  - Todo el contenido de estos 3 modales se traduce automáticamente al cambiar el idioma a inglés (ES/EN)
-- Visión corporativa
-- Servicios al migrante
-- Grid de las 8 empresas del grupo (Nuestras Empresas)
-- Estadísticas, contacto con mapa y footer
+## Importante sobre pruebas locales
+Si abres `index.html` haciendo doble clic (protocolo file://), Windows/Edge puede aplicar restricciones de seguridad a archivos descargados de internet ("Mark of the Web") que interfieren con JavaScript. Para probar sin problemas:
+- Usa la extensión "Live Server" en VS Code, o
+- Publícalo en GitHub Pages (recomendado para producción)
 
-## Uso
-Abrir `index.html` directamente en el navegador, o abrir la carpeta en Visual Studio Code / GitHub Pages para publicarlo.
+## Uso en GitHub Pages
+1. Sube estos archivos (manteniendo la estructura de carpetas) a un repositorio de GitHub.
+2. Activa GitHub Pages: Settings → Pages → Source: rama main, carpeta / (root).
+3. Accede en https://tu-usuario.github.io/nombre-repositorio/
 
 ## Notas
 - Los íconos son SVG originales dibujados a mano (no se usan imágenes de bancos con derechos de autor).
